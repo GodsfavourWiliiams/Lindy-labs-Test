@@ -1,11 +1,21 @@
+export const BASE_URL = 'https://pokeapi.co/api/v2';
 
-export const searchPokemon = async (pokemon) => {
+
+export const searchPokemon = async (query) => {
+    if (query && query.length > 0) {
+        /* replaces all whitespaces in the query with + symbol in order to 
+        send it as a query param in the GET request */  
+    const parsedQuery = query.replaceAll(' ', '+');
     try {
-        let url = `https://pokeapi.co/api/v2/pokemon/${pokemon}`
+        const url = `${BASE_URL}/pokemon/${parsedQuery}`;
         const response = await fetch(url)
         return await response.json()
     } catch (error) {
         console.log("error: ", error)
+    }
+}
+else {
+    return [];
     }
 }
 
