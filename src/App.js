@@ -3,7 +3,7 @@ import { getPokemonData, getPokemons, searchPokemon } from "./api";
 import Navbar from "./components/navbar";
 import Pokedex from "./components/pokedex";
 import "./App.css";
-import SearchInput from "./components/searchBar/SearchInput";
+import SearchInput from "./components/searchbar/SearchInput";
 import debounce from "lodash.debounce";
 
 const fetchData = async (query, cb) => {
