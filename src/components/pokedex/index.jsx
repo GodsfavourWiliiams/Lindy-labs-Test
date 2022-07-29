@@ -28,7 +28,18 @@ export default function Pokedex(props) {
       </div>
 
       {loading ? (
-        <div className="hold">Loading... </div>
+        <div className="loader">
+          <div className="lds-roller">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
       ) : (
         <div className="pokedex-grid">
           {pokemons &&
