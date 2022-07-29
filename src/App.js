@@ -2,20 +2,18 @@ import React, { useEffect, useState } from "react";
 import { getPokemonData, getPokemons, searchPokemon } from "./api";
 import Navbar from "./components/navbar";
 import Pokedex from "./components/pokedex";
-import './App.css';
-import SearchInput from './components/SearchInput';
-import debounce from 'lodash.debounce';
-
+import "./App.css";
+import SearchInput from "./components/searchBar/SearchInput";
+import debounce from "lodash.debounce";
 
 const fetchData = async (query, cb) => {
   const res = await searchPokemon(query);
   cb(res);
- };
+};
 
- const debouncedFetchData = debounce((query, cb) => {
+const debouncedFetchData = debounce((query, cb) => {
   fetchData(query, cb);
- }, 700);
-
+}, 700);
 
 function App() {
   const [page, setPage] = useState(0);
@@ -23,6 +21,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [notFound, setNotFound] = useState(false);
   const [pokemons, setPokemons] = useState([]);
+  const [query, setQuery] = useState("");
 
   const itemsPerPage = 24;
   const fetchPokemons = async () => {
@@ -39,7 +38,7 @@ function App() {
       setLoading(false);
       setTotalPages(Math.ceil(data.count / itemsPerPage));
     } catch (error) {
-      console.log("fetchPokemons error:", error);
+      console.log("fetch error:", error);
     }
   };
 
@@ -48,14 +47,8 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
-
-
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState([]);
- 
   useEffect(() => {
-    debouncedFetchData(query, res => {
-      
+    debouncedFetchData(query, (res) => {
       if (!query) {
         return fetchPokemons();
       }
@@ -71,35 +64,30 @@ function App() {
         setTotalPages(1);
         setLoading(false);
       }
-      
-     setResults(res);
     });
-   }, [query]);
-
-  console.log(results)
-
+  }, [query]);
 
   return (
-      <div className="body">
-        <Navbar />
-        <SearchInput
-          value={query}
-          onChangeText={e => {
+    <div className="body">
+      <Navbar />
+      <SearchInput
+        value={query}
+        onChangeText={(e) => {
           setQuery(e.target.value.toLowerCase());
-          }}
+        }}
+      />
+      {notFound ? (
+        <h3 className="text-center">Search Query not found</h3>
+      ) : (
+        <Pokedex
+          pokemons={pokemons}
+          loading={loading}
+          page={page}
+          setPage={setPage}
+          totalPages={totalPages}
         />
-        {notFound ? (
-          <h3 className="text-center">Search Query not found</h3>
-        ) : (
-          <Pokedex
-            pokemons={pokemons}
-            loading={loading}
-            page={page}
-            setPage={setPage}
-            totalPages={totalPages}
-          />
-        )}
-      </div>
+      )}
+    </div>
   );
 }
 
